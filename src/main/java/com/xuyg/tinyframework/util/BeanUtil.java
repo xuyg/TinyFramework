@@ -1,5 +1,6 @@
 package com.xuyg.tinyframework.util;
 
+import com.xuyg.tinyframework.constant.IFrameworkProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,21 @@ public final class BeanUtil {
     private  static  final Map<Class<?>,Object> MAP=new HashMap<Class<?>, Object>();
 
     static {
-        //TODO: not complete
+        Set<Class<?>> set=ClassUtil.getClassSet(PropertiesUtil.getValue(IFrameworkProperties.File,IFrameworkProperties.APP_BASE_PACKAGE));
+        for (Class<?> cls:set){
+            Object obj=ReflectionUtil.newInstance(cls);
+            MAP.put(cls,obj);
+        }
+    }
+
+    public  static  Map<Class<?>,Object> getBeanMap(){
+        return  MAP;
+    }
+
+    public  static  Object getBean(Class<?> cls){
+        if(!MAP.containsKey(cls)){
+            throw  new RuntimeException("class not found:"+cls);
+        }
+        return  MAP.get(cls);
     }
 }

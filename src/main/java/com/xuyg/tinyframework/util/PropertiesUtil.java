@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by xyg on 2017/3/2.
@@ -14,8 +16,11 @@ import java.util.Properties;
 public final class PropertiesUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
+    private static ConcurrentHashMap<String,Properties> properties=new ConcurrentHashMap<String, Properties>();
 
     public static Properties loadProperties(String filePath) {
+        if(properties.containsKey(filePath))
+            return properties.get(filePath);
         Properties prop = null;
         InputStream stream = null;
         try {
@@ -25,6 +30,7 @@ public final class PropertiesUtil {
             }
             prop = new Properties();
             prop.load(stream);
+            properties.put(filePath,prop);
         } catch (IOException e) {
             logger.error("load properties file failed", e);
         } finally {
