@@ -20,22 +20,22 @@ public final class ControllerUtil {
 
     static {
         Set<Class<?>> controllerSet=FrameworkClassUtil.getControllerClassSet();
-        if(!controllerSet.isEmpty()){
-            for (Class<?> cls:controllerSet){
-                Method[] methods=cls.getDeclaredMethods();
-                if(ArrayUtils.isEmpty(methods))continue;
-                for (Method method:methods){
-                    if(!method.isAnnotationPresent(Action.class))continue;
-                    Action action=method.getAnnotation(Action.class);
-                    String mapping=action.value();
-                    if(!mapping.matches("\\w+:/\\w*"))continue;
-                    String[] array=mapping.split(":");
-                    if(ArrayUtils.isNotEmpty(array)&&array.length==2){
-                        String requestMethod=array[0];
-                        String requestPath=array[1];
-                        Request request=new Request(requestMethod,requestPath);
-                        Handler handler=new Handler(cls,method);
-                        ACTION_MAP.put(request,handler);
+        if(!controllerSet.isEmpty()) {
+            for (Class<?> cls : controllerSet) {
+                Method[] methods = cls.getDeclaredMethods();
+                if (ArrayUtils.isEmpty(methods)) continue;
+                for (Method method : methods) {
+                    if (!method.isAnnotationPresent(Action.class)) continue;
+                    Action action = method.getAnnotation(Action.class);
+                    String mapping = action.value();
+                    if (!mapping.matches("\\w+:/\\w*")) continue;
+                    String[] array = mapping.split(":");
+                    if (ArrayUtils.isNotEmpty(array) && array.length == 2) {
+                        String requestMethod = array[0];
+                        String requestPath = array[1];
+                        Request request = new Request(requestMethod, requestPath);
+                        Handler handler = new Handler(cls, method);
+                        ACTION_MAP.put(request, handler);
                     }
 
                 }
